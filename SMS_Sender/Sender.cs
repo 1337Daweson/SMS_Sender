@@ -11,13 +11,14 @@ public class RequestData
     public List<string> recipients { get; set; }
     public int channel { get; set; }
 }
+
 public class Sender
 {
     private string ClientId;
     private string ClientSecret;
     private int Channel;
     private string SmsUrl = "https://app.gosms.eu/api/v1/messages";
-    
+
     public Sender(string clientId, string clientSecret, int channel)
     {
         this.ClientId = clientId;
@@ -36,23 +37,23 @@ public class Sender
         var clientHandler = new HttpClientHandler();
         using var client = new HttpClient(clientHandler);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-        
+
         var bodyData = new RequestData
         {
             message = message,
             channel = this.Channel,
             recipients = phoneNumbers
         };
-        
 
-            var jsonContent = JsonConvert.SerializeObject(bodyData);
-            var body = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            
+
+        var jsonContent = JsonConvert.SerializeObject(bodyData);
+        var body = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
         var response = await client.PostAsync(SmsUrl, body);
 
         if (response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"POST request successful {(int)response.StatusCode}");
+            Console.WriteLine($"POST request successful: {(int)response.StatusCode}");
             return 0;
         }
         else
@@ -60,10 +61,5 @@ public class Sender
             Console.WriteLine($"POST request failed with status code: {(int)response.StatusCode}");
             return 1;
         }
-
-        
     }
-
-    
-
 }

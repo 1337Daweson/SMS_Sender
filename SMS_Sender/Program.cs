@@ -1,19 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
-using SMS_Sender;
+﻿using SMS_Sender;
+using SMS_Sender.Config;
+using SMS_Sender.FileReader;
 
-var builder = new ConfigurationBuilder()
-    .AddJsonFile($"appsettings.json", true, true);
-var config = builder.Build();
-var clientId = config["ClientId"];
-var clientSecret = config["ClientSecret"];
-var channel = config["Channel"];
-var sender = new Sender(clientId, clientSecret, Convert.ToInt32(channel));
+
+Configuration.Load();
+var sender = new Sender(Configuration.ClientId, Configuration.ClientSecret, Convert.ToInt32(Configuration.Channel));
 
 if (args.Length < 2 ||
     !args.Any(arg => arg.StartsWith("-message=")) ||
     !args.Any(arg => arg.StartsWith("-tolist=")))
 {
-    Console.WriteLine("Usage: MyApp -message=\"<message>\" -tolist=\"<filename>\"");
+    Console.WriteLine("Usage: SMS_Sender.exe -message=\"<message>\" -tolist=\"<filename>\"");
     Console.WriteLine("  -message: The message to write (enclose in quotes).");
     Console.WriteLine("  -tolist: The path to the file to read.");
     return;
@@ -35,32 +32,20 @@ foreach (string arg in args)
     }
 }
 
-// Validate extracted values (optional)
+// Validate extracted values
 if (string.IsNullOrEmpty(message) || string.IsNullOrEmpty(filePath))
 {
     Console.WriteLine("Error: Missing required arguments.");
     return;
 }
 
-// Read the file content
-string fileContent;
-try
-{
-    fileContent = File.ReadAllText(filePath);
-}
-catch (FileNotFoundException)
-{
-    Console.WriteLine($"Error: File not found - {filePath}");
-    return;
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"Error reading file: {ex.Message}");
-    return;
-}
+// Parse phone numbers
+List<string> phoneNumbers = FileReader.ReadPhoneNumbers(filePath);
 
-// Parse phone numbers (assuming each number is on a separate line)
-List<string> phoneNumbers = fileContent.Split(";", StringSplitOptions.RemoveEmptyEntries).ToList();
+if (phoneNumbers.Count == 0)
+{
+    Console.WriteLine($"návratový kód: 1");
+}
 
 // Simulate processing message and phone numbers (replace with your logic)
 Console.WriteLine($"Zpráva: {message}");
