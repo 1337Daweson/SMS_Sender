@@ -44,8 +44,7 @@ public class Sender
             channel = this.Channel,
             recipients = phoneNumbers
         };
-
-
+        
         var jsonContent = JsonConvert.SerializeObject(bodyData);
         var body = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
