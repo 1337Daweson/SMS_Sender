@@ -7,6 +7,8 @@ public class Configuration
     public static string ClientId { get; set; }
     public static string ClientSecret { get; set; }
     public static string Channel { get; set; }
+    public static string SmsUrl { get; set; }
+    public static string TokenUrl { get; set; }
 
     public static void Load()
     {
@@ -19,5 +21,7 @@ public class Configuration
         ClientId = config["ClientId"];
         ClientSecret = config["ClientSecret"];
         Channel = config["Channel"];
+        SmsUrl = config["SmsUrl"];
+        TokenUrl = config["TokenUrl"];
     }
 }

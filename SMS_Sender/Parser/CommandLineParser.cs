@@ -7,7 +7,6 @@ public static class CommandLineParser
         var arguments = new Dictionary<string, string>();
         foreach (string arg in args)
         {
-            // Split the argument into key and value
             var parts = arg.Split(new[] { '=' }, 2);
             if (parts.Length == 2)
             {

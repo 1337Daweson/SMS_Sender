@@ -5,10 +5,8 @@ namespace SMS_Sender;
 
 public static class AccessTokenManager
 {
-    private const string tokenUrl = "https://app.gosms.eu/oauth/v2/token";
     private const string grantType = "client_credentials";
-    
-    public static async Task<string> GetAccessTokenAsync(string clientId, string clientSecret)
+    public static async Task<string> GetAccessTokenAsync(string clientId, string clientSecret, string tokenUrl)
     {
         using var client = new HttpClient();
         var bodyData = new Dictionary<string, string>

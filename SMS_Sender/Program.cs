@@ -4,25 +4,33 @@ using SMS_Sender.FileReader;
 using SMS_Sender.Parser;
 
 Configuration.Load();
-var sender = new Sender(Configuration.ClientId, Configuration.ClientSecret, Convert.ToInt32(Configuration.Channel));
 
-if (args.Length < 2 ||
+var sender = new Sender(
+    Configuration.ClientId, 
+    Configuration.ClientSecret, 
+    Convert.ToInt32(Configuration.Channel), 
+    Configuration.SmsUrl, 
+    Configuration.TokenUrl);
+
+if (args.Length != 2 ||
     !args.Any(arg => arg.StartsWith(Constants.MESSAGE_ARGUMENT + "=")) ||
     !args.Any(arg => arg.StartsWith(Constants.FILE_PATH_ARGUMENT + "=")))
 {
-    Console.WriteLine("Usage: SMS_Sender.exe -message=\"<message>\" -tolist=\"<filename>\"");
-    Console.WriteLine("  -message: The message to write (enclose in quotes).");
-    Console.WriteLine("  -tolist: The path to the file to read.");
+    Console.WriteLine("Nebyli zadané správné parametry!");
+    Console.WriteLine("Použití: SMS_Sender.exe -message=\"<message>\" -tolist=\"<filename>\"");
+    Console.WriteLine("  -message=: Zpráva kterou chceš poslat, uzavřená v uvozovkách: -message=\"TEST MESSAGE\"");
+    Console.WriteLine("  -tolist=: Cesta k souboru s příjemci, uzavřená v uvozovkách: -tolist=\"C:\\Users\\Test\\Desktop\\senders.txt\"");
+    Console.WriteLine($"návratový kód: 1");
+    Console.Read();
     return;
 }
 
 var arguments = CommandLineParser.ParseArguments(args);
-string message = arguments.TryGetValue(Constants.MESSAGE_ARGUMENT, out string messageValue) ? messageValue : null;
-string filePath = arguments.TryGetValue(Constants.FILE_PATH_ARGUMENT, out string filePathValue) ? filePathValue : null;
-
+string message = arguments.GetValueOrDefault(Constants.MESSAGE_ARGUMENT);
+string filePath = arguments.GetValueOrDefault(Constants.FILE_PATH_ARGUMENT);
 if (string.IsNullOrEmpty(message) || string.IsNullOrEmpty(filePath))
 {
-    Console.WriteLine("Error: Missing required arguments.");
+    Console.WriteLine("Chyba v parametrech");
     Console.Read();
     return;
 }
@@ -36,7 +44,7 @@ if (phoneNumbers.Count == 0)
 }
 
 Console.WriteLine($"Zpráva: {message}");
-Console.WriteLine("příjemci:");
+Console.WriteLine("Příjemci:");
 foreach (string number in phoneNumbers)
 {
     Console.WriteLine($"- {number}");
