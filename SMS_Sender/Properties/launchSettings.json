@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SMS_Sender": {
+      "commandName": "Project",
+      "commandLineArgs": "-message=\"testcmd\" -tolist=\"C:\\Users\\david.netusil\\Desktop\\testSMS.txt\""
+    }
+  }
+}

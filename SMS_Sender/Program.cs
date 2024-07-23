@@ -50,6 +50,8 @@ foreach (string number in phoneNumbers)
     Console.WriteLine($"- {number}");
 }
 
+Console.WriteLine("SMSUrl: " + Configuration.SmsUrl);
+Console.WriteLine("TokenUrl: " + Configuration.TokenUrl);
 int code = await sender.Send(message, phoneNumbers);
+//int code = 123;
 Console.WriteLine($"návratový kód: {code}");
-Console.Read();

@@ -1,6 +1,7 @@
 namespace SMS_Sender.Config;
 
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 public class Configuration
 {
@@ -13,7 +14,7 @@ public class Configuration
     public static void Load()
     {
         var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location))
             .AddJsonFile($"appsettings.json", true, true);
 
 
